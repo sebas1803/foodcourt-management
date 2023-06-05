@@ -1,5 +1,5 @@
 server:
-  port: 8081
+  port: 8082
 
 spring:
   datasource:
@@ -13,3 +13,10 @@ spring:
     show-sql: true
 appDescription: "Pragma PowerUp FoodCourt Hexagonal Microservices"
 appVersion: "1.0.0"
+
+users:
+  service:
+    url: "http://localhost:8081/api/v1/"
+
+jwt:
+  secret-key: mi-clave-secreta-personalizada-de-32-bytes

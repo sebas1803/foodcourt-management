@@ -1,4 +1,4 @@
-package com.pragma.powerup.application.mapper;
+package com.pragma.powerup.application.mapper.request;
 
 import com.pragma.powerup.application.dto.request.ObjectRequestDto;
 import com.pragma.powerup.domain.model.ObjectModel;
