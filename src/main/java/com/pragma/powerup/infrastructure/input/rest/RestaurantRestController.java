@@ -6,6 +6,7 @@ import com.pragma.powerup.infrastructure.security.config.SecurityContext;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +24,7 @@ import java.util.stream.Collectors;
 @RestController
 @Tag(name = "Restaurants")
 @RequestMapping("api/v1/restaurants")
+@SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class RestaurantRestController {
     private final IRestaurantHandler restaurantHandler;
@@ -31,8 +34,8 @@ public class RestaurantRestController {
     @ApiResponse(responseCode = "201", description = "Restaurant created", content = @Content)
     @PostMapping()
     public ResponseEntity<Void> createRestaurant(@Valid @RequestBody SaveRestaurantRequestDto saveRestaurantRequestDto,
-                                                 @RequestHeader("Authorization") String authorizationHeader) {
-        String token = authorizationHeader.replace("Bearer ", "");
+                                                 HttpServletRequest request) {
+        String token = request.getHeader("Authorization").replace("Bearer ", "");
         SecurityContext.setToken(token);
         restaurantHandler.saveRestaurant(saveRestaurantRequestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
