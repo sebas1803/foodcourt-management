@@ -16,7 +16,7 @@ appVersion: "1.0.0"
 
 users:
   service:
-    url: "http://localhost:8081/api/v1/"
+    url: "http://localhost:8081/api/v1"
 
 jwt:
   secret-key: mi-clave-secreta-personalizada-de-32-bytes

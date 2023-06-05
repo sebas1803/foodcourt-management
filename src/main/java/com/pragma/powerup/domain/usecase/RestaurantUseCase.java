@@ -8,8 +8,6 @@ import com.pragma.powerup.domain.spi.IRestaurantPersistencePort;
 import com.pragma.powerup.infrastructure.out.api.UsersApiClient;
 import com.pragma.powerup.infrastructure.security.config.SecurityContext;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
 @RequiredArgsConstructor
 public class RestaurantUseCase implements IRestaurantServicePort {

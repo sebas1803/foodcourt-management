@@ -16,7 +16,7 @@ public class UsersApiClient {
     private String baseUrl;
 
     public UserResponseDto getUserById(Long userId, String token) {
-        String url = baseUrl + "users/findById/" + userId;
+        String url = baseUrl + "/users/findById/" + userId;
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", "Bearer " + token);
         HttpEntity<String> entity = new HttpEntity<>(null, headers);
