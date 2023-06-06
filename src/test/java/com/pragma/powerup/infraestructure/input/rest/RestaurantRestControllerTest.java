@@ -3,32 +3,24 @@ package com.pragma.powerup.infraestructure.input.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pragma.powerup.application.dto.request.SaveRestaurantRequestDto;
 import com.pragma.powerup.application.handler.IRestaurantHandler;
-import com.pragma.powerup.infrastructure.input.rest.RestaurantRestController;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, properties = "spring.security.mode=none")
 @AutoConfigureMockMvc
-public class RestaurantControllerTest {
+public class RestaurantRestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

@@ -22,7 +22,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
-                .antMatchers(HttpMethod.POST, "api/v1/restaurants").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/restaurants").hasAuthority("ROLE_ADMIN")
+                .antMatchers(HttpMethod.POST, "/api/v1/dishes").hasAuthority("ROLE_OWNER")
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
