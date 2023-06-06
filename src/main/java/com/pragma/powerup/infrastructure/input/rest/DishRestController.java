@@ -3,6 +3,7 @@ package com.pragma.powerup.infrastructure.input.rest;
 import com.pragma.powerup.application.dto.request.SaveDishRequestDto;
 import com.pragma.powerup.application.dto.request.SaveRestaurantRequestDto;
 import com.pragma.powerup.application.dto.request.UpdateDishRequestDto;
+import com.pragma.powerup.application.dto.request.UpdateDishStatusRequestDto;
 import com.pragma.powerup.application.dto.response.DishResponseDto;
 import com.pragma.powerup.application.handler.IDishHandler;
 import com.pragma.powerup.infrastructure.security.config.SecurityContext;
@@ -47,5 +48,14 @@ public class DishRestController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(updatedDish);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_OWNER')")
+    @Operation(summary = "Enable or disable a dish")
+    @ApiResponse(responseCode = "200", description = "Dish status updated", content = @Content)
+    @PatchMapping("{id}")
+    public ResponseEntity<DishResponseDto> changeDishStatus(@RequestBody UpdateDishStatusRequestDto updateDishStatusRequestDto, @PathVariable Long id) {
+        dishHandler.changeDishStatus(updateDishStatusRequestDto, id);
+        return ResponseEntity.ok().build();
     }
 }

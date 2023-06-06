@@ -2,6 +2,7 @@ package com.pragma.powerup.application.handler;
 
 import com.pragma.powerup.application.dto.request.SaveDishRequestDto;
 import com.pragma.powerup.application.dto.request.UpdateDishRequestDto;
+import com.pragma.powerup.application.dto.request.UpdateDishStatusRequestDto;
 import com.pragma.powerup.application.dto.response.DishResponseDto;
 import com.pragma.powerup.application.handler.impl.DishHandler;
 import com.pragma.powerup.application.mapper.request.IDishRequestMapper;
@@ -44,7 +45,7 @@ public class DishHandlerTest {
         saveDishRequestDto.setDescription("Plato de arroz verde con pollo originario de Perú");
         saveDishRequestDto.setUrlImage("https://www.logo.dish.com");
         saveDishRequestDto.setCategory("FONDO");
-        saveDishRequestDto.setRestaurant(restaurantId);
+        saveDishRequestDto.setIdRestaurant(restaurantId);
 
         DishModel dishModel = new DishModel();
         when(dishRequestMapper.toDishModel(saveDishRequestDto)).thenReturn(dishModel);
@@ -116,6 +117,24 @@ public class DishHandlerTest {
 
         // Then
         assertEquals(expectedDishResponseDto, foundDish);
+    }
+
+    @Test
+    public void testChangeDishStatus() {
+        // Given
+        Long dishId = 1L;
+        DishModel dishModel = new DishModel();
+        dishModel.setId(dishId);
+        UpdateDishStatusRequestDto updateDishStatusRequestDto = new UpdateDishStatusRequestDto();
+        updateDishStatusRequestDto.setStatus(1);
+
+        when(dishServicePort.findDishById(dishId)).thenReturn(dishModel);
+
+        // When
+        dishHandler.changeDishStatus(updateDishStatusRequestDto, dishId);
+
+        // Then
+        verify(dishServicePort).changeDishStatus(dishModel, dishId);
     }
 }
 

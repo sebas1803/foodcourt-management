@@ -94,4 +94,23 @@ public class DishUseCaseTest {
         // Then
         assertEquals(expectedDishModel, actualDishModel);
     }
+    @Test
+    public void testChangeDishStatus() {
+        // Given
+        Long id = 1L;
+        DishModel dishModel = new DishModel();
+        dishModel.setStatus(0);
+
+        DishModel existingDish = new DishModel();
+        existingDish.setId(id);
+        existingDish.setStatus(1);
+
+        when(dishPersistencePort.findDishById(id)).thenReturn(existingDish);
+
+        // When
+        dishUseCase.changeDishStatus(dishModel, id);
+
+        // Then
+        verify(dishPersistencePort).changeDishStatus(existingDish, id);
+    }
 }

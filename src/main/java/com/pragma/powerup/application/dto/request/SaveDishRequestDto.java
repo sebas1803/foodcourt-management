@@ -30,6 +30,6 @@ public class SaveDishRequestDto {
     private String category;
 
     @NotNull(message = "Restaurant is required")
-    private Long restaurant;
+    private Long idRestaurant;
 }
 

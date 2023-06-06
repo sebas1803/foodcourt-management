@@ -12,7 +12,7 @@ import org.mapstruct.ReportingPolicy;
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface IDishRequestMapper {
-    @Mapping(target = "restaurant", source = "restaurant", qualifiedByName = "mapRestaurant")
+    @Mapping(target = "restaurant", source = "idRestaurant", qualifiedByName = "mapRestaurant")
     DishModel toDishModel(SaveDishRequestDto saveDishRequestDto);
 
     @Named("mapRestaurant")

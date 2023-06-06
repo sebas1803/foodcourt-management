@@ -3,6 +3,7 @@ package com.pragma.powerup.infraestructure.input.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pragma.powerup.application.dto.request.SaveDishRequestDto;
 import com.pragma.powerup.application.dto.request.UpdateDishRequestDto;
+import com.pragma.powerup.application.dto.request.UpdateDishStatusRequestDto;
 import com.pragma.powerup.application.dto.response.DishResponseDto;
 import com.pragma.powerup.application.handler.IDishHandler;
 import com.pragma.powerup.infrastructure.input.rest.DishRestController;
@@ -19,8 +20,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,7 +51,7 @@ public class DishRestControllerTest {
         saveDishRequestDto.setDescription("Plato de arroz verde con pollo originario de Perú");
         saveDishRequestDto.setUrlImage("https://www.logo.dish.com");
         saveDishRequestDto.setCategory("FONDO");
-        saveDishRequestDto.setRestaurant(restaurantId);
+        saveDishRequestDto.setIdRestaurant(restaurantId);
 
         // When
         mockMvc.perform(post("/api/v1/dishes")
@@ -95,6 +95,24 @@ public class DishRestControllerTest {
 
         // Then
         verify(dishHandler, times(1)).updateDish(any(UpdateDishRequestDto.class), eq(dishId));
+    }
+
+    @Test
+    void testChangeDishStatus() throws Exception {
+        // Given
+        Long dishId = 1L;
+        UpdateDishStatusRequestDto updateDishStatusRequestDto = new UpdateDishStatusRequestDto();
+        updateDishStatusRequestDto.setStatus(1);
+
+        // When
+        mockMvc.perform(patch("/api/v1/dishes/" + dishId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(updateDishStatusRequestDto)))
+                .andExpect(status().isOk());
+
+        // Then
+        verify(dishHandler, times(1)).changeDishStatus(any(UpdateDishStatusRequestDto.class),
+                eq(dishId));
     }
 }
 
