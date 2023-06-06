@@ -49,6 +49,31 @@ public class DishUseCaseTest {
     }
 
     @Test
+    public void testUpdateDish() {
+        // Given
+        Long dishId = 1L;
+        DishModel dishModel = new DishModel();
+        dishModel.setDescription("New description");
+        dishModel.setPrice(20.0);
+
+        DishModel existingDish = new DishModel();
+        existingDish.setId(dishId);
+        existingDish.setDescription("Old description");
+        existingDish.setPrice(10.0);
+
+        when(dishPersistencePort.findDishById(dishId)).thenReturn(existingDish);
+        when(dishPersistencePort.updateDish(existingDish, dishId)).thenReturn(existingDish);
+
+        // When
+        DishModel updatedDish = dishUseCase.updateDish(dishModel, dishId);
+
+        // Then
+        assertEquals(existingDish.getId(), updatedDish.getId());
+        assertEquals(dishModel.getDescription(), updatedDish.getDescription());
+        assertEquals(dishModel.getPrice(), updatedDish.getPrice());
+    }
+
+    @Test
     public void testFindDishById() {
         // Given
         Long id = 1L;

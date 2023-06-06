@@ -1,6 +1,7 @@
 package com.pragma.powerup.application.handler;
 
 import com.pragma.powerup.application.dto.request.SaveDishRequestDto;
+import com.pragma.powerup.application.dto.request.UpdateDishRequestDto;
 import com.pragma.powerup.application.dto.response.DishResponseDto;
 import com.pragma.powerup.application.handler.impl.DishHandler;
 import com.pragma.powerup.application.mapper.request.IDishRequestMapper;
@@ -53,6 +54,36 @@ public class DishHandlerTest {
 
         // Then
         verify(dishServicePort).saveDish(dishModel);
+    }
+
+    @Test
+    public void testUpdateDish() {
+        // Given
+        DishModel dishId = new DishModel();
+        dishId.setId(1L);
+        UpdateDishRequestDto updateDishRequestDto = new UpdateDishRequestDto();
+        updateDishRequestDto.setPrice(20.0);
+        updateDishRequestDto.setDescription("New description");
+
+        DishModel dishModel = new DishModel();
+        when(dishServicePort.findDishById(dishId.getId())).thenReturn(dishModel);
+        when(dishServicePort.updateDish(dishModel, dishId.getId())).thenReturn(dishModel);
+
+        DishResponseDto expectedDishResponseDto = new DishResponseDto();
+        expectedDishResponseDto.setName("Test Dish");
+        expectedDishResponseDto.setPrice(20.0);
+        expectedDishResponseDto.setDescription("New description");
+        expectedDishResponseDto.setUrlImage("https://www.example.com/dish.jpg");
+        expectedDishResponseDto.setCategory("BEBIDA");
+        expectedDishResponseDto.setRestaurant(1L);
+
+        when(dishResponseMapper.toResponse(dishModel)).thenReturn(expectedDishResponseDto);
+
+        // When
+        DishResponseDto updatedDish = dishHandler.updateDish(updateDishRequestDto, dishId.getId());
+
+        // Then
+        assertEquals(expectedDishResponseDto, updatedDish);
     }
 
     @Test
