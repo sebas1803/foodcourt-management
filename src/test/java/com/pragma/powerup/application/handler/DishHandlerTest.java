@@ -76,7 +76,7 @@ public class DishHandlerTest {
         expectedDishResponseDto.setDescription("New description");
         expectedDishResponseDto.setUrlImage("https://www.example.com/dish.jpg");
         expectedDishResponseDto.setCategory("BEBIDA");
-        expectedDishResponseDto.setRestaurant(1L);
+        expectedDishResponseDto.setIdRestaurant(1L);
 
         when(dishResponseMapper.toResponse(dishModel)).thenReturn(expectedDishResponseDto);
 
@@ -108,7 +108,7 @@ public class DishHandlerTest {
         expectedDishResponseDto.setDescription("Test description");
         expectedDishResponseDto.setUrlImage("https://www.example.com/dish.jpg");
         expectedDishResponseDto.setCategory("FONDO");
-        expectedDishResponseDto.setRestaurant(dishModel.getRestaurant().getId());
+        expectedDishResponseDto.setIdRestaurant(dishModel.getRestaurant().getId());
 
         when(dishResponseMapper.toResponse(dishModel)).thenReturn(expectedDishResponseDto);
 

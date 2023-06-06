@@ -3,6 +3,7 @@ package com.pragma.powerup.infrastructure.input.rest;
 import com.pragma.powerup.application.dto.request.SaveDishRequestDto;
 import com.pragma.powerup.application.dto.request.UpdateDishRequestDto;
 import com.pragma.powerup.application.dto.request.UpdateDishStatusRequestDto;
+import com.pragma.powerup.application.dto.response.DishListResponseDto;
 import com.pragma.powerup.application.dto.response.DishResponseDto;
 import com.pragma.powerup.application.handler.IDishHandler;
 import io.swagger.v3.oas.annotations.Operation;
@@ -15,6 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Tag(name = "Dishes")
@@ -52,5 +55,13 @@ public class DishRestController {
     public ResponseEntity<DishResponseDto> changeDishStatus(@RequestBody UpdateDishStatusRequestDto updateDishStatusRequestDto, @PathVariable Long id) {
         dishHandler.changeDishStatus(updateDishStatusRequestDto, id);
         return ResponseEntity.ok().build();
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_CLIENT')")
+    @Operation(summary = "Get dishes by restaurant")
+    @ApiResponse(responseCode = "200", description = "Dishes returned", content = @Content)
+    @GetMapping("/restaurant/{restaurantId}")
+    public ResponseEntity<DishListResponseDto> getDishesByRestaurant(@PathVariable Long restaurantId, @RequestParam int page, @RequestParam int size) {
+        return new ResponseEntity<>(dishHandler.getDishesByRestaurant(restaurantId, page, size), HttpStatus.OK);
     }
 }

@@ -3,6 +3,7 @@ package com.pragma.powerup.application.handler.impl;
 import com.pragma.powerup.application.dto.request.SaveDishRequestDto;
 import com.pragma.powerup.application.dto.request.UpdateDishRequestDto;
 import com.pragma.powerup.application.dto.request.UpdateDishStatusRequestDto;
+import com.pragma.powerup.application.dto.response.DishListResponseDto;
 import com.pragma.powerup.application.dto.response.DishResponseDto;
 import com.pragma.powerup.application.handler.IDishHandler;
 import com.pragma.powerup.application.mapper.request.IDishRequestMapper;
@@ -15,6 +16,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -56,5 +62,22 @@ public class DishHandler implements IDishHandler {
 
         updateDishStatusRequestDto.updateStatus(dishById);
         dishServicePort.changeDishStatus(dishById, id);
+    }
+
+    @Override
+    public DishListResponseDto getDishesByRestaurant(Long restaurantId, int page, int size) {
+        Map<String, List<DishModel>> dishes = dishServicePort.findDishByRestaurant(restaurantId, page, size);
+        DishListResponseDto dishListResponse = new DishListResponseDto();
+        Map<String, List<DishResponseDto>> dishesByCategory = new HashMap<>();
+
+        for (Map.Entry<String, List<DishModel>> entry : dishes.entrySet()) {
+            String category = entry.getKey();
+            List<DishModel> dishModels = entry.getValue();
+            List<DishResponseDto> dishResponses = dishResponseMapper.toListResponse(dishModels);
+            dishesByCategory.put(category, dishResponses);
+        }
+
+        dishListResponse.setDishesByCategory(dishesByCategory);
+        return dishListResponse;
     }
 }
