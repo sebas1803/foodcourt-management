@@ -24,6 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/api/v1/restaurants").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.POST, "/api/v1/dishes").hasAuthority("ROLE_OWNER")
+                .antMatchers(HttpMethod.PUT, "/api/v1/dishes/{id}").hasAuthority("ROLE_OWNER")
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
