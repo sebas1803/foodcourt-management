@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 public class RestaurantRestController {
     private final IRestaurantHandler restaurantHandler;
 
-    //@PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Operation(summary = "Create a new restaurant")
     @ApiResponse(responseCode = "201", description = "Restaurant created", content = @Content)
     @PostMapping()

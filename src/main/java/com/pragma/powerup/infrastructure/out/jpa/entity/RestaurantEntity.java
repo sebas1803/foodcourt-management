@@ -6,6 +6,10 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "restaurants", uniqueConstraints = {
@@ -21,7 +25,7 @@ public class RestaurantEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(length = 60, nullable = false)
+    @Column(length = 200, nullable = false)
     private String name;
     @Column(nullable = false)
     private String nit;
@@ -33,4 +37,7 @@ public class RestaurantEntity {
     private String urlLogo;
     @Column(nullable = false)
     private Long idOwner;
+
+    @OneToMany(mappedBy = "restaurant", cascade = CascadeType.MERGE, orphanRemoval = true)
+    private List<DishEntity> dishes = new ArrayList<>();
 }
