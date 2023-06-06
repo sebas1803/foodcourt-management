@@ -9,6 +9,8 @@ import com.pragma.powerup.infrastructure.out.api.UsersApiClient;
 import com.pragma.powerup.infrastructure.security.config.SecurityContext;
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 public class RestaurantUseCase implements IRestaurantServicePort {
     private final IRestaurantPersistencePort restaurantPersistencePort;
@@ -24,5 +26,10 @@ public class RestaurantUseCase implements IRestaurantServicePort {
         } else {
             throw new DomainException("The user does not exist or have the proper role");
         }
+    }
+
+    @Override
+    public List<RestaurantModel> getAllRestaurants(int page, int size) {
+        return restaurantPersistencePort.getAllRestaurants(page, size);
     }
 }

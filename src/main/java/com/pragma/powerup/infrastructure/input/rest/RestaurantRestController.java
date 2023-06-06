@@ -1,11 +1,15 @@
 package com.pragma.powerup.infrastructure.input.rest;
 
 import com.pragma.powerup.application.dto.request.SaveRestaurantRequestDto;
+import com.pragma.powerup.application.dto.response.RestaurantListResponseDto;
 import com.pragma.powerup.application.handler.IRestaurantHandler;
 import com.pragma.powerup.infrastructure.security.config.SecurityContext;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -39,5 +43,13 @@ public class RestaurantRestController {
         SecurityContext.setToken(token);
         restaurantHandler.saveRestaurant(saveRestaurantRequestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_CLIENT')")
+    @Operation(summary = "Get all restaurants")
+    @ApiResponse(responseCode = "200", description = "All restaurants returned", content = @Content)
+    @GetMapping()
+    public ResponseEntity<List<RestaurantListResponseDto>> getAllRestaurant(@RequestParam int page, @RequestParam int size) {
+        return new ResponseEntity<>(restaurantHandler.getAllRestaurants(page, size), HttpStatus.OK);
     }
 }
