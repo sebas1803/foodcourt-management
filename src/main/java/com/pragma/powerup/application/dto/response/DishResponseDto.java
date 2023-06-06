@@ -4,12 +4,13 @@ import lombok.*;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 public class DishResponseDto {
     private String name;
     private Double price;
     private String description;
     private String urlImage;
     private String category;
-    private Long restaurant;
+    private Long idRestaurant;
 }

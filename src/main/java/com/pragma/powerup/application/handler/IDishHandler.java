@@ -3,6 +3,7 @@ package com.pragma.powerup.application.handler;
 import com.pragma.powerup.application.dto.request.SaveDishRequestDto;
 import com.pragma.powerup.application.dto.request.UpdateDishRequestDto;
 import com.pragma.powerup.application.dto.request.UpdateDishStatusRequestDto;
+import com.pragma.powerup.application.dto.response.DishListResponseDto;
 import com.pragma.powerup.application.dto.response.DishResponseDto;
 
 import java.util.List;
@@ -16,5 +17,5 @@ public interface IDishHandler {
 
     void changeDishStatus(UpdateDishStatusRequestDto updateDishStatusRequestDto, Long id);
 
-    //List<DishListResponseDto> getDishesByRestaurant(Long restaurantId, int page, int size);
+    DishListResponseDto getDishesByRestaurant(Long restaurantId, int page, int size);
 }

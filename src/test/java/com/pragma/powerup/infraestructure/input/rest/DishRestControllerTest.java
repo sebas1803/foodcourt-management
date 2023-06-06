@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pragma.powerup.application.dto.request.SaveDishRequestDto;
 import com.pragma.powerup.application.dto.request.UpdateDishRequestDto;
 import com.pragma.powerup.application.dto.request.UpdateDishStatusRequestDto;
+import com.pragma.powerup.application.dto.response.DishListResponseDto;
 import com.pragma.powerup.application.dto.response.DishResponseDto;
 import com.pragma.powerup.application.handler.IDishHandler;
 import com.pragma.powerup.infrastructure.input.rest.DishRestController;
@@ -17,8 +18,11 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.util.*;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -77,7 +81,7 @@ public class DishRestControllerTest {
         expectedDishResponseDto.setDescription("New description");
         expectedDishResponseDto.setUrlImage("https://www.example.com/dish.jpg");
         expectedDishResponseDto.setCategory("BEBIDA");
-        expectedDishResponseDto.setRestaurant(1L);
+        expectedDishResponseDto.setIdRestaurant(1L);
 
         when(dishHandler.updateDish(any(UpdateDishRequestDto.class), eq(dishId))).thenReturn(expectedDishResponseDto);
 
@@ -91,7 +95,7 @@ public class DishRestControllerTest {
                 .andExpect(jsonPath("$.description").value(expectedDishResponseDto.getDescription()))
                 .andExpect(jsonPath("$.urlImage").value(expectedDishResponseDto.getUrlImage()))
                 .andExpect(jsonPath("$.category").value(expectedDishResponseDto.getCategory()))
-                .andExpect(jsonPath("$.restaurant").value(expectedDishResponseDto.getRestaurant()));
+                .andExpect(jsonPath("$.idRestaurant").value(expectedDishResponseDto.getIdRestaurant()));
 
         // Then
         verify(dishHandler, times(1)).updateDish(any(UpdateDishRequestDto.class), eq(dishId));
@@ -113,6 +117,42 @@ public class DishRestControllerTest {
         // Then
         verify(dishHandler, times(1)).changeDishStatus(any(UpdateDishStatusRequestDto.class),
                 eq(dishId));
+    }
+
+    @Test
+    public void testGetDishesByRestaurantId() throws Exception {
+        // Given
+        Long restaurantId = 1L;
+        int page = 0;
+        int size = 10;
+        Map<String, List<DishResponseDto>> expectedResponse = new HashMap<>();
+        expectedResponse.put("FONDO", Arrays.asList(
+                new DishResponseDto("dish1", 10.0, "desc1", "img1.com", "FONDO", 1L),
+                new DishResponseDto("dish2", 10.0, "desc2", "img2.com", "FONDO", 1L)
+        ));
+        DishListResponseDto dishListResponseDto = new DishListResponseDto();
+        dishListResponseDto.setDishesByCategory(expectedResponse);
+        given(dishHandler.getDishesByRestaurant(restaurantId, page, size)).willReturn(dishListResponseDto);
+
+        // When
+        mockMvc.perform(get("/api/v1/dishes/restaurant/{restaurantId}?page={page}&size={size}", restaurantId, page, size)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.dishesByCategory.FONDO[0].name").value("dish1"))
+                .andExpect(jsonPath("$.dishesByCategory.FONDO[0].price").value(10.0))
+                .andExpect(jsonPath("$.dishesByCategory.FONDO[0].description").value("desc1"))
+                .andExpect(jsonPath("$.dishesByCategory.FONDO[0].urlImage").value("img1.com"))
+                .andExpect(jsonPath("$.dishesByCategory.FONDO[0].category").value("FONDO"))
+                .andExpect(jsonPath("$.dishesByCategory.FONDO[0].idRestaurant").value(1))
+                .andExpect(jsonPath("$.dishesByCategory.FONDO[1].name").value("dish2"))
+                .andExpect(jsonPath("$.dishesByCategory.FONDO[1].price").value(10.0))
+                .andExpect(jsonPath("$.dishesByCategory.FONDO[1].description").value("desc2"))
+                .andExpect(jsonPath("$.dishesByCategory.FONDO[1].urlImage").value("img2.com"))
+                .andExpect(jsonPath("$.dishesByCategory.FONDO[1].category").value("FONDO"))
+                .andExpect(jsonPath("$.dishesByCategory.FONDO[1].idRestaurant").value(1));
+
+        // Then
+        verify(dishHandler, times(1)).getDishesByRestaurant(restaurantId, page, size);
     }
 }
 
