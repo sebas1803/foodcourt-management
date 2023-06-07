@@ -10,7 +10,6 @@ import com.pragma.powerup.application.handler.IRestaurantHandler;
 import com.pragma.powerup.application.mapper.request.IOrderRequestMapper;
 import com.pragma.powerup.application.mapper.response.IOrderResponseMapper;
 import com.pragma.powerup.domain.api.IOrderServicePort;
-import com.pragma.powerup.domain.model.OrderItemModel;
 import com.pragma.powerup.domain.model.OrderModel;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +33,7 @@ public class OrderHandler implements IOrderHandler {
     private final IRestaurantHandler restaurantHandler;
 
     @Override
-    public OrderResponseDto saveOrder(SaveOrderRequestDto saveOrderRequestDto) {
+    public void saveOrder(SaveOrderRequestDto saveOrderRequestDto) {
         Long clientId = saveOrderRequestDto.getIdClient();
 
         List<String> activeStatuses = Arrays.asList(OrderModel.PENDING, OrderModel.IN_PREPARATION, OrderModel.READY);
@@ -58,7 +57,7 @@ public class OrderHandler implements IOrderHandler {
             orderItemHandler.saveOrderItem(orderItem);
         }
 
-        return orderResponseMapper.toResponseOrder(orderModel);
+        orderResponseMapper.toResponseOrder(orderModel);
     }
 
     @Override

@@ -10,7 +10,7 @@ public class OrderItemUseCase implements IOrderItemServicePort {
     private final IOrderItemPersistencePort orderItemPersistencePort;
 
     @Override
-    public OrderItemModel saveOrderItem(OrderItemModel orderDishModel) {
-        return orderItemPersistencePort.saveOrderItem(orderDishModel);
+    public void saveOrderItem(OrderItemModel orderDishModel) {
+        orderItemPersistencePort.saveOrderItem(orderDishModel);
     }
 }
