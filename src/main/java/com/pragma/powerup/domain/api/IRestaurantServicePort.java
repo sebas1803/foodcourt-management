@@ -12,5 +12,5 @@ public interface IRestaurantServicePort {
 
     List<RestaurantModel> getAllRestaurants(int page, int size);
 
-    RestaurantModel getById(Long id);
+    RestaurantModel getRestaurantById(Long restaurantId);
 }
