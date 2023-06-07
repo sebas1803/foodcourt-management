@@ -1,6 +1,7 @@
 package com.pragma.powerup.infrastructure.input.rest;
 
 import com.pragma.powerup.application.dto.request.SaveOrderRequestDto;
+import com.pragma.powerup.application.dto.response.OrderResponseDto;
 import com.pragma.powerup.application.handler.IOrderHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,10 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @Tag(name = "Orders")
@@ -31,5 +31,17 @@ public class OrderRestController {
     public ResponseEntity<Void> saveOrder(@RequestBody SaveOrderRequestDto saveOrderRequestDto) {
         orderHandler.saveOrder(saveOrderRequestDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_EMPLOYEE')")
+    @Operation(summary = "Find all orders by status")
+    @ApiResponse(responseCode = "200", description = "Orders by status returned", content = @Content)
+    @GetMapping()
+    public ResponseEntity<List<OrderResponseDto>> findAllOrders(@RequestParam String status,
+                                                                @RequestParam Long restaurantId,
+                                                                @RequestParam int page,
+                                                                @RequestParam int size) {
+        List<OrderResponseDto> orderResponseDtoList = orderHandler.findAllOrdersByStatus(status, restaurantId, page, size);
+        return new ResponseEntity<>(orderResponseDtoList, HttpStatus.OK);
     }
 }

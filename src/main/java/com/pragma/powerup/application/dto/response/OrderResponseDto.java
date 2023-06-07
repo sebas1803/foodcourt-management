@@ -18,5 +18,5 @@ public class OrderResponseDto {
     private Long idRestaurant;
     private Long idEmployee;
     private String status;
-    private List<OrderItemModel> items;
+    private List<OrderItemModel> orderDishes;
 }

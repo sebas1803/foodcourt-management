@@ -62,7 +62,8 @@ public class OrderHandler implements IOrderHandler {
 
     @Override
     public List<OrderResponseDto> findAllOrdersByStatus(String status, Long restaurantId, int page, int size) {
-        return null;
+        List<OrderModel> orderModelList = orderServicePort.findAllByStatus(status, restaurantId, page, size);
+        return orderResponseMapper.toResponseList(orderModelList);
     }
 
     @Override
