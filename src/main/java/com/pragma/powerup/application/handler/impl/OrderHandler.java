@@ -33,7 +33,7 @@ public class OrderHandler implements IOrderHandler {
     private final IRestaurantHandler restaurantHandler;
 
     @Override
-    public void saveOrder(SaveOrderRequestDto saveOrderRequestDto) {
+    public OrderResponseDto saveOrder(SaveOrderRequestDto saveOrderRequestDto) {
         Long clientId = saveOrderRequestDto.getIdClient();
 
         List<String> activeStatuses = Arrays.asList(OrderModel.PENDING, OrderModel.IN_PREPARATION, OrderModel.READY);
@@ -57,7 +57,7 @@ public class OrderHandler implements IOrderHandler {
             orderItemHandler.saveOrderItem(orderItem);
         }
 
-        orderResponseMapper.toResponseOrder(orderModel);
+        return orderResponseMapper.toResponseOrder(orderModel);
     }
 
     @Override

@@ -6,7 +6,7 @@ import com.pragma.powerup.application.dto.response.OrderResponseDto;
 import java.util.List;
 
 public interface IOrderHandler {
-    void saveOrder(SaveOrderRequestDto saveOrderRequestDto);
+    OrderResponseDto saveOrder(SaveOrderRequestDto saveOrderRequestDto);
 
     List<OrderResponseDto> findAllOrdersByStatus(String status, Long restaurantId, int page, int size);
 
