@@ -22,12 +22,21 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable().authorizeRequests()
+                // Restaurants
                 .antMatchers(HttpMethod.POST, "/api/v1/restaurants").hasAuthority("ROLE_ADMIN")
                 .antMatchers(HttpMethod.GET, "/api/v1/restaurants").hasAuthority("ROLE_CLIENT")
+                // Dishes
                 .antMatchers(HttpMethod.POST, "/api/v1/dishes").hasAuthority("ROLE_OWNER")
-                .antMatchers(HttpMethod.PUT, "/api/v1/dishes/{id}").hasAuthority("ROLE_OWNER")
                 .antMatchers(HttpMethod.GET, "/api/v1/dishes/restaurant/{restaurantId}").hasAuthority("ROLE_CLIENT")
+                .antMatchers(HttpMethod.PUT, "/api/v1/dishes/{id}").hasAuthority("ROLE_OWNER")
                 .antMatchers(HttpMethod.PATCH, "/api/v1/dishes/{id}").hasAuthority("ROLE_OWNER")
+                // Orders
+                .antMatchers(HttpMethod.POST, "/api/v1/orders").hasAuthority("ROLE_CLIENT")
+                .antMatchers(HttpMethod.GET, "/api/v1/orders").hasAuthority("ROLE_EMPLOYEE")
+                .antMatchers(HttpMethod.PUT, "/api/v1/orders/cancelOrder/{orderId}").hasAuthority("ROLE_CLIENT")
+                .antMatchers(HttpMethod.PUT, "/api/v1/orders/assign").hasAuthority("ROLE_EMPLOYEE")
+                .antMatchers(HttpMethod.PUT, "/api/v1/orders/readyStatus/{orderId}").hasAuthority("ROLE_EMPLOYEE")
+                .antMatchers(HttpMethod.PUT, "/api/v1/orders/deliveredStatus/{orderId}").hasAuthority("ROLE_EMPLOYEE")
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
