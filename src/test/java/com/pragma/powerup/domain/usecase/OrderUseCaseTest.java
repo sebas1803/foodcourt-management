@@ -10,7 +10,9 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -44,5 +46,26 @@ public class OrderUseCaseTest {
         assertEquals(OrderModel.PENDING, savedOrder.getStatus());
         assertNotNull(savedOrder.getDate());
         verify(orderPersistencePort, times(1)).saveOrder(orderModel);
+    }
+
+    @Test
+    public void testFindAllByStatus() {
+        // Given
+        String status = OrderModel.PENDING;
+        Long restaurantId = 1L;
+        int page = 0;
+        int size = 10;
+        List<OrderModel> orders = Arrays.asList(new OrderModel(), new OrderModel());
+        when(orderPersistencePort.findAllByStatus(status, restaurantId, page, size)).thenReturn(orders);
+
+        // When
+        List<OrderModel> foundOrders = orderUseCase.findAllByStatus(status, restaurantId, page, size);
+
+        // Then
+        assertNotNull(foundOrders);
+        assertEquals(orders.size(), foundOrders.size());
+        assertEquals(orders.get(0), foundOrders.get(0));
+        assertEquals(orders.get(1), foundOrders.get(1));
+        verify(orderPersistencePort, times(1)).findAllByStatus(status, restaurantId, page, size);
     }
 }

@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Mockito.*;
@@ -73,5 +74,28 @@ public class OrderRestControllerTest {
 
         // Then
         verify(orderHandler, times(1)).saveOrder((any(SaveOrderRequestDto.class)));
+    }
+
+    @Test
+    void testFindAllOrders() throws Exception {
+        // Given
+        String status = "PENDING";
+        Long restaurantId = 1L;
+        int page = 0;
+        int size = 10;
+        List<OrderResponseDto> orderResponseDtoList = Collections.singletonList(new OrderResponseDto());
+
+        // When
+        when(orderHandler.findAllOrdersByStatus(status, restaurantId, page, size)).thenReturn(orderResponseDtoList);
+
+        mockMvc.perform(get("/api/v1/orders")
+                        .param("status", status)
+                        .param("restaurantId", restaurantId.toString())
+                        .param("page", String.valueOf(page))
+                        .param("size", String.valueOf(size)))
+                .andExpect(status().isOk());
+
+        // Then
+        verify(orderHandler, times(1)).findAllOrdersByStatus(status, restaurantId, page, size);
     }
 }
