@@ -1,19 +1,33 @@
 package com.pragma.powerup.infraestructure.input.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pragma.powerup.application.dto.request.AssignOrderRequestDto;
 import com.pragma.powerup.application.dto.request.OrderItemRequestDto;
-import com.pragma.powerup.application.dto.request.SaveDishRequestDto;
 import com.pragma.powerup.application.dto.request.SaveOrderRequestDto;
+import com.pragma.powerup.application.dto.request.UpdateDishRequestDto;
+import com.pragma.powerup.application.dto.response.DishResponseDto;
 import com.pragma.powerup.application.dto.response.OrderResponseDto;
 import com.pragma.powerup.application.handler.IOrderHandler;
+import com.pragma.powerup.domain.api.IOrderServicePort;
+import com.pragma.powerup.domain.model.OrderModel;
 import com.pragma.powerup.infrastructure.input.rest.OrderRestController;
+import com.pragma.powerup.infrastructure.security.jwt.UserManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -21,8 +35,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -98,4 +114,6 @@ public class OrderRestControllerTest {
         // Then
         verify(orderHandler, times(1)).findAllOrdersByStatus(status, restaurantId, page, size);
     }
+
+
 }

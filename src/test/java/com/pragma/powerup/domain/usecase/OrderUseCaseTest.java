@@ -68,4 +68,22 @@ public class OrderUseCaseTest {
         assertEquals(orders.get(1), foundOrders.get(1));
         verify(orderPersistencePort, times(1)).findAllByStatus(status, restaurantId, page, size);
     }
+
+    @Test
+    void testUpdateStatus() {
+        // Given
+        Long orderId = 1L;
+        String status = OrderModel.IN_PREPARATION;
+        OrderModel orderModel = new OrderModel(1L, new Date(), 1L, 1L, 1L, "PENDING", new ArrayList<>());
+        when(orderPersistencePort.saveOrder(orderModel)).thenReturn(orderModel);
+
+        // When
+        OrderModel updatedOrder = orderUseCase.updateStatus(status, orderModel);
+
+        // Then
+        verify(orderPersistencePort, times(1)).saveOrder(orderModel);
+        assertEquals(updatedOrder.getStatus(), status);
+        assertEquals(updatedOrder, orderModel);
+
+    }
 }

@@ -14,7 +14,7 @@ public interface IOrderHandler {
 
     OrderResponseDto cancelOrder(Long orderId, Long clientId);
 
-    void assignEmployeeToOrder(List<Long> orderId, Long employeeId);
+    void assignEmployeeToOrder(List<Long> ordersId, Long employeeId);
 
     void markOrderAsReady(Long orderId);
 

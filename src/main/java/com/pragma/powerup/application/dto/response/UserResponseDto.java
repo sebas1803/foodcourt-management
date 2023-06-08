@@ -10,6 +10,7 @@ import java.util.List;
 @Setter
 @RequiredArgsConstructor
 public class UserResponseDto {
+    private Long id;
     private String name;
     private String lastName;
     private String idDocument;

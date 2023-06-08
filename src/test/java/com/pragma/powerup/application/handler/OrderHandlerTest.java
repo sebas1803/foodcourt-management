@@ -113,4 +113,28 @@ public class OrderHandlerTest {
         assertEquals(expectedResponse, actualResponse);
         verify(orderServicePort).findAllByStatus(eq(status), eq(restaurantId), eq(page), eq(size));
     }
+
+    @Test
+    public void testAssignEmployeeToOrder() {
+        // Given
+        Long id = 2L;
+        List<Long> ordersId = Arrays.asList(1L, 2L, 3L);
+        OrderModel orderModel1 = new OrderModel(1L, new Date(), 1L, null, 1L, "PENDING", new ArrayList<>());
+        OrderModel orderModel2 = new OrderModel(2L, new Date(), 2L, null, 1L, "PENDING", new ArrayList<>());
+        OrderModel orderModel3 = new OrderModel(3L, new Date(), 3L, null, 2L, "PENDING", new ArrayList<>());
+        when(orderServicePort.findOrderById(1L)).thenReturn(orderModel1);
+        when(orderServicePort.findOrderById(2L)).thenReturn(orderModel2);
+        when(orderServicePort.findOrderById(3L)).thenReturn(orderModel3);
+
+        // When
+        orderHandler.assignEmployeeToOrder(ordersId, id);
+
+        // Then
+        verify(orderServicePort, times(1)).updateStatus(eq(OrderModel.IN_PREPARATION), eq(orderModel1));
+        verify(orderServicePort, times(1)).updateStatus(eq(OrderModel.IN_PREPARATION), eq(orderModel2));
+        verify(orderServicePort, times(1)).updateStatus(eq(OrderModel.IN_PREPARATION), eq(orderModel3));
+        assertEquals(id, orderModel1.getIdEmployee());
+        assertEquals(id, orderModel2.getIdEmployee());
+        assertEquals(id, orderModel3.getIdEmployee());
+    }
 }
