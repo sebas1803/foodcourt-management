@@ -81,11 +81,6 @@ public class OrderHandler implements IOrderHandler {
     }
 
     @Override
-    public OrderResponseDto updateOrderStatus(Long orderId, String status) {
-        return null;
-    }
-
-    @Override
     public OrderResponseDto cancelOrder(Long orderId, Long clientId) {
         return null;
     }
@@ -120,7 +115,12 @@ public class OrderHandler implements IOrderHandler {
 
     @Override
     public void markOrderAsDelivered(Long orderId, String securityCode) {
-
+        OrderModel orderModel = orderServicePort.findOrderById(orderId);
+        if (orderModel.getSecurityCode().equals(securityCode)) {
+            orderServicePort.updateStatus(OrderModel.DELIVERED, orderModel);
+        } else {
+            throw new RuntimeException("Security code is not valid");
+        }
     }
 
     public static String getSecurityPin() {

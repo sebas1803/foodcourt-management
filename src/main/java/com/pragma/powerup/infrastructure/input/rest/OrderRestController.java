@@ -70,4 +70,13 @@ public class OrderRestController {
         orderHandler.markOrderAsReadyWithMessage(orderId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PreAuthorize("hasAuthority('ROLE_EMPLOYEE')")
+    @Operation(summary = "Mark an order as delivered")
+    @ApiResponse(responseCode = "200", description = "Orders marked as delivered", content = @Content)
+    @PutMapping("/deliveredStatus/{orderId}")
+    public ResponseEntity<Void> markOrderAsDelivered(@PathVariable Long orderId, @RequestParam String securityCode) {
+        orderHandler.markOrderAsDelivered(orderId, securityCode);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

@@ -137,4 +137,19 @@ public class OrderHandlerTest {
         assertEquals(id, orderModel2.getIdEmployee());
         assertEquals(id, orderModel3.getIdEmployee());
     }
+
+    @Test
+    public void testMarkOrderAsDelivered() {
+        // Given
+        Long orderId = 1L;
+        String securityCode = "123456";
+        OrderModel orderModel = new OrderModel(1L, new Date(), 1L, 3L, 1L, "READY", securityCode, new ArrayList<>());
+        when(orderServicePort.findOrderById(orderId)).thenReturn(orderModel);
+
+        // When
+        orderHandler.markOrderAsDelivered(orderId, securityCode);
+
+        // Then
+        verify(orderServicePort, times(1)).updateStatus(eq(OrderModel.DELIVERED), eq(orderModel));
+    }
 }
