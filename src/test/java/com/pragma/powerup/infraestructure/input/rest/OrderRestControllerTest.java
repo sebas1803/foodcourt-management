@@ -1,30 +1,21 @@
 package com.pragma.powerup.infraestructure.input.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pragma.powerup.application.dto.request.AssignOrderRequestDto;
 import com.pragma.powerup.application.dto.request.OrderItemRequestDto;
 import com.pragma.powerup.application.dto.request.SaveOrderRequestDto;
-import com.pragma.powerup.application.dto.request.UpdateDishRequestDto;
-import com.pragma.powerup.application.dto.response.DishResponseDto;
 import com.pragma.powerup.application.dto.response.OrderResponseDto;
 import com.pragma.powerup.application.handler.IOrderHandler;
-import com.pragma.powerup.domain.api.IOrderServicePort;
-import com.pragma.powerup.domain.model.OrderModel;
 import com.pragma.powerup.infrastructure.input.rest.OrderRestController;
 import com.pragma.powerup.infrastructure.security.jwt.UserManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -35,8 +26,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -146,5 +138,29 @@ public class OrderRestControllerTest {
 
         // Then
         verify(orderHandler, times(1)).markOrderAsDelivered(orderId, securityCode);
+    }
+
+    @Test
+    public void testCancelOrder() throws Exception {
+        // Given
+        Long orderId = 1L;
+        OrderResponseDto orderResponseDto = new OrderResponseDto();
+
+        when(orderHandler.cancelOrder(eq(orderId), anyLong())).thenReturn(orderResponseDto);
+
+        UserManager userPrincipal = new UserManager(1L, "test@example.com", "+51987654321",
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_CLIENT")));
+        Authentication authentication = new UsernamePasswordAuthenticationToken(userPrincipal, null);
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+        // When
+        mockMvc.perform(put("/api/v1/orders/cancelOrder/{orderId}", orderId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        // Then
+        verify(orderHandler, times(1)).cancelOrder(eq(orderId), anyLong());
     }
 }

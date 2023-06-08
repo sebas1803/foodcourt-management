@@ -79,4 +79,14 @@ public class OrderRestController {
         orderHandler.markOrderAsDelivered(orderId, securityCode);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @PreAuthorize("hasAuthority('ROLE_CLIENT')")
+    @Operation(summary = "Cancel an order")
+    @ApiResponse(responseCode = "200", description = "Order canceled", content = @Content)
+    @PutMapping("/cancelOrder/{orderId}")
+    public ResponseEntity<OrderResponseDto> cancelOrder(@PathVariable Long orderId) {
+        UserManager userPrincipal = (UserManager) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        OrderResponseDto orderResponseDto = orderHandler.cancelOrder(orderId, userPrincipal.getId());
+        return new ResponseEntity<>(orderResponseDto, HttpStatus.OK);
+    }
 }

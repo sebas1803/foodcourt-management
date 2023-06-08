@@ -3,6 +3,7 @@ package com.pragma.powerup.application.handler;
 import com.pragma.powerup.application.dto.request.OrderItemRequestDto;
 import com.pragma.powerup.application.dto.request.SaveOrderRequestDto;
 import com.pragma.powerup.application.dto.response.OrderResponseDto;
+import com.pragma.powerup.application.dto.response.RestaurantResponseDto;
 import com.pragma.powerup.application.handler.impl.OrderHandler;
 import com.pragma.powerup.application.mapper.request.IOrderRequestMapper;
 import com.pragma.powerup.application.mapper.response.IOrderResponseMapper;
@@ -45,7 +46,7 @@ public class OrderHandlerTest {
 
     @Test
     void testSaveOrder() {
-        //Given
+        // Given
         SaveOrderRequestDto saveOrderRequestDto = new SaveOrderRequestDto();
         saveOrderRequestDto.setIdClient(6L);
         saveOrderRequestDto.setIdRestaurant(1L);
@@ -63,14 +64,16 @@ public class OrderHandlerTest {
         orderModel.setIdEmployee(0L);
         orderModel.setStatus(OrderModel.PENDING);
 
-        // Mock the necessary methods
-        when(orderServicePort.findAllOrdersByClientId(saveOrderRequestDto.getIdClient()))
-                .thenReturn(Collections.emptyList());
-        when(orderRequestMapper.toOrderModel(saveOrderRequestDto))
+        List<OrderModel> activeOrders = new ArrayList<>();
+        when(orderServicePort.findAllByStatusInAndClientId(anyList(), eq(saveOrderRequestDto.getIdClient())))
+                .thenReturn(activeOrders);
+        when(restaurantHandler.getRestaurantById(eq(saveOrderRequestDto.getIdRestaurant())))
+                .thenReturn(new RestaurantResponseDto());
+        when(orderRequestMapper.toOrderModel(eq(saveOrderRequestDto)))
                 .thenReturn(orderModel);
-        when(orderServicePort.saveOrder(orderModel))
+        when(orderServicePort.saveOrder(eq(orderModel)))
                 .thenReturn(orderModel);
-        when(orderResponseMapper.toResponseOrder(orderModel))
+        when(orderResponseMapper.toResponseOrder(eq(orderModel)))
                 .thenReturn(new OrderResponseDto());
 
         // When
@@ -78,12 +81,12 @@ public class OrderHandlerTest {
 
         // Then
         assertNotNull(response);
-        verify(orderServicePort).findAllOrdersByClientId(saveOrderRequestDto.getIdClient());
-        verify(orderRequestMapper).toOrderModel(saveOrderRequestDto);
-        verify(orderServicePort).saveOrder(orderModel);
-        verify(orderResponseMapper).toResponseOrder(orderModel);
-        verify(restaurantHandler).getRestaurantById(saveOrderRequestDto.getIdRestaurant());
-        verify(orderItemHandler).saveOrderItem(Mockito.any(OrderItemRequestDto.class));
+        verify(orderServicePort).findAllByStatusInAndClientId(anyList(), eq(saveOrderRequestDto.getIdClient()));
+        verify(restaurantHandler).getRestaurantById(eq(saveOrderRequestDto.getIdRestaurant()));
+        verify(orderRequestMapper).toOrderModel(eq(saveOrderRequestDto));
+        verify(orderServicePort).saveOrder(eq(orderModel));
+        verify(orderResponseMapper).toResponseOrder(eq(orderModel));
+        verify(orderItemHandler).saveOrderItem(any(OrderItemRequestDto.class));
     }
 
     @Test

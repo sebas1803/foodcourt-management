@@ -3,6 +3,7 @@ package com.pragma.powerup.application.mapper.response;
 import com.pragma.powerup.application.dto.response.OrderResponseDto;
 import com.pragma.powerup.domain.model.OrderModel;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.List;
         unmappedTargetPolicy = ReportingPolicy.IGNORE,
         unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface IOrderResponseMapper {
+    @Mapping(target = "orderDishes", ignore = true)
     OrderResponseDto toResponseOrder(OrderModel orderModel);
 
     List<OrderResponseDto> toResponseList(List<OrderModel> ordersModel);
