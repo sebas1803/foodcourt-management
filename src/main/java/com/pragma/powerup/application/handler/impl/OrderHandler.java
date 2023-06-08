@@ -25,10 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -82,7 +79,13 @@ public class OrderHandler implements IOrderHandler {
 
     @Override
     public OrderResponseDto cancelOrder(Long orderId, Long clientId) {
-        return null;
+        OrderModel orderModel = orderServicePort.findOrderById(orderId);
+        if (Objects.equals(orderModel.getIdClient(), clientId)) {
+            orderModel = orderServicePort.updateStatus(OrderModel.CANCELLED, orderModel);
+            return orderResponseMapper.toResponseOrder(orderModel);
+        } else {
+            throw new RuntimeException("You cannot cancel an order that is not yours");
+        }
     }
 
     @Override

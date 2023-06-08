@@ -44,15 +44,14 @@ public class OrderUseCase implements IOrderServicePort {
         if (statusMap.get(status) == null) {
             throw new DomainException("That status does not exist");
         }
-        List<String> permittedStatuses = statusMap.get(orderModel.getStatus());
-        if (permittedStatuses.contains(status)) {
-            if (status.equals(OrderModel.CANCELLED)) {
-                throw new DomainException("Sorry, your order is in preparation and cannot be cancelled");
-            }
+        if (statusMap.get(orderModel.getStatus()).contains(status)) {
             orderModel.setStatus(status);
             return orderPersistencePort.saveOrder(orderModel);
         } else {
-            throw new DomainException("The order is not in " + orderModel.getStatus() + " to be " + status);
+            if (status.equals(OrderModel.CANCELLED)) {
+                throw new DomainException("Sorry, your order is in preparation and cannot be cancelled");
+            }
+            throw new DomainException("Cannot change order status from " + orderModel.getStatus() + " to " + status);
         }
     }
 
