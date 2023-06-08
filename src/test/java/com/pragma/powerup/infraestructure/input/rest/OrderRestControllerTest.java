@@ -131,4 +131,20 @@ public class OrderRestControllerTest {
         // Then
         verify(orderHandler, times(1)).markOrderAsReadyWithMessage(orderId);
     }
+
+    @Test
+    void testMarkOrderAsDelivered() throws Exception {
+        // Given
+        Long orderId = 1L;
+        String securityCode = "1234";
+
+        // When
+        mockMvc.perform(put("/api/v1/orders/deliveredStatus/{orderId}", orderId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .param("securityCode", securityCode))
+                .andExpect(status().isOk());
+
+        // Then
+        verify(orderHandler, times(1)).markOrderAsDelivered(orderId, securityCode);
+    }
 }

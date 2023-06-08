@@ -10,8 +10,6 @@ public interface IOrderHandler {
 
     List<OrderResponseDto> findAllOrdersByStatus(String status, Long restaurantId, int page, int size);
 
-    OrderResponseDto updateOrderStatus(Long orderId, String status);
-
     OrderResponseDto cancelOrder(Long orderId, Long clientId);
 
     void assignEmployeeToOrder(List<Long> ordersId, Long employeeId);
