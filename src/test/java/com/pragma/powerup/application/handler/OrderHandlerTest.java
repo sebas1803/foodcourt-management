@@ -8,6 +8,7 @@ import com.pragma.powerup.application.mapper.request.IOrderRequestMapper;
 import com.pragma.powerup.application.mapper.response.IOrderResponseMapper;
 import com.pragma.powerup.domain.api.IOrderServicePort;
 import com.pragma.powerup.domain.api.IRestaurantServicePort;
+import com.pragma.powerup.domain.model.OrderItemModel;
 import com.pragma.powerup.domain.model.OrderModel;
 import com.pragma.powerup.domain.model.RestaurantModel;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.Instant;
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
@@ -82,5 +84,33 @@ public class OrderHandlerTest {
         verify(orderResponseMapper).toResponseOrder(orderModel);
         verify(restaurantHandler).getRestaurantById(saveOrderRequestDto.getIdRestaurant());
         verify(orderItemHandler).saveOrderItem(Mockito.any(OrderItemRequestDto.class));
+    }
+
+    @Test
+    public void testFindAllByStatus() {
+        // Given
+        Long restaurantId = 1L;
+        int page = 0;
+        int size = 10;
+        String status = OrderModel.PENDING;
+        List<OrderItemModel> orderDishModels1 = new ArrayList<>();
+        orderDishModels1.add(new OrderItemModel(1L, 1L, 1));
+        List<OrderItemModel> orderDishModels2 = new ArrayList<>();
+        orderDishModels2.add(new OrderItemModel(1L, 1L, 2));
+        List<OrderModel> orders = new ArrayList<>();
+        orders.add(new OrderModel(1L, Date.from(new Date().toInstant()), 1L, 1L, 1L, "PENDING", orderDishModels1));
+        orders.add(new OrderModel(2L, Date.from(new Date().toInstant()), 1L, 1L, 1L, "PENDING", orderDishModels2));
+
+        when(orderServicePort.findAllByStatus(eq(status), eq(restaurantId), eq(page),
+                eq(size))).thenReturn(orders);
+
+        List<OrderResponseDto> expectedResponse = orderResponseMapper.toResponseList(orders);
+
+        // When
+        List<OrderResponseDto> actualResponse = orderHandler.findAllOrdersByStatus(status, restaurantId, page, size);
+
+        // Then
+        assertEquals(expectedResponse, actualResponse);
+        verify(orderServicePort).findAllByStatus(eq(status), eq(restaurantId), eq(page), eq(size));
     }
 }
