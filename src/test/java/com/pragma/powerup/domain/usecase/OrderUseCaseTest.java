@@ -35,7 +35,7 @@ public class OrderUseCaseTest {
     @Test
     public void testSaveOrder() {
         // Given
-        OrderModel orderModel = new OrderModel(1L, new Date(), 1L, 1L, 1L, "PENDING", new ArrayList<>());
+        OrderModel orderModel = new OrderModel(1L, new Date(), 1L, 1L, 1L, "PENDING", null, new ArrayList<>());
         when(orderPersistencePort.saveOrder(orderModel)).thenReturn(orderModel);
 
         // When
@@ -74,7 +74,7 @@ public class OrderUseCaseTest {
         // Given
         Long orderId = 1L;
         String status = OrderModel.IN_PREPARATION;
-        OrderModel orderModel = new OrderModel(1L, new Date(), 1L, 1L, 1L, "PENDING", new ArrayList<>());
+        OrderModel orderModel = new OrderModel(1L, new Date(), 1L, null, 1L, "PENDING", null, new ArrayList<>());
         when(orderPersistencePort.saveOrder(orderModel)).thenReturn(orderModel);
 
         // When

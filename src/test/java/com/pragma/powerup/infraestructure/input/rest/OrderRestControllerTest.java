@@ -115,5 +115,20 @@ public class OrderRestControllerTest {
         verify(orderHandler, times(1)).findAllOrdersByStatus(status, restaurantId, page, size);
     }
 
+    @Test
+    public void testMarkOrderAsReady() throws Exception {
+        // Given
+        Long orderId = 1L;
 
+        doNothing().when(orderHandler).markOrderAsReadyWithMessage(orderId);
+
+        // When
+        mockMvc.perform(put("/api/v1/orders/readyStatus/{orderId}", orderId)
+                        .header("Authorization", "Bearer {your_token_here}")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        // Then
+        verify(orderHandler, times(1)).markOrderAsReadyWithMessage(orderId);
+    }
 }

@@ -12,6 +12,7 @@ import com.pragma.powerup.domain.usecase.DishUseCase;
 import com.pragma.powerup.domain.usecase.OrderItemUseCase;
 import com.pragma.powerup.domain.usecase.OrderUseCase;
 import com.pragma.powerup.domain.usecase.RestaurantUseCase;
+import com.pragma.powerup.infrastructure.out.api.TwilioApiClient;
 import com.pragma.powerup.infrastructure.out.api.UsersApiClient;
 import com.pragma.powerup.infrastructure.out.jpa.adapter.DishJpaAdapter;
 import com.pragma.powerup.infrastructure.out.jpa.adapter.OrderItemJpaAdapter;

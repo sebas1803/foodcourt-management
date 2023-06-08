@@ -98,8 +98,8 @@ public class OrderHandlerTest {
         List<OrderItemModel> orderDishModels2 = new ArrayList<>();
         orderDishModels2.add(new OrderItemModel(1L, 1L, 2));
         List<OrderModel> orders = new ArrayList<>();
-        orders.add(new OrderModel(1L, Date.from(new Date().toInstant()), 1L, 1L, 1L, "PENDING", orderDishModels1));
-        orders.add(new OrderModel(2L, Date.from(new Date().toInstant()), 1L, 1L, 1L, "PENDING", orderDishModels2));
+        orders.add(new OrderModel(1L, Date.from(new Date().toInstant()), 1L, 1L, 1L, "PENDING", null, orderDishModels1));
+        orders.add(new OrderModel(2L, Date.from(new Date().toInstant()), 1L, 1L, 1L, "PENDING", null, orderDishModels2));
 
         when(orderServicePort.findAllByStatus(eq(status), eq(restaurantId), eq(page),
                 eq(size))).thenReturn(orders);
@@ -119,9 +119,9 @@ public class OrderHandlerTest {
         // Given
         Long id = 2L;
         List<Long> ordersId = Arrays.asList(1L, 2L, 3L);
-        OrderModel orderModel1 = new OrderModel(1L, new Date(), 1L, null, 1L, "PENDING", new ArrayList<>());
-        OrderModel orderModel2 = new OrderModel(2L, new Date(), 2L, null, 1L, "PENDING", new ArrayList<>());
-        OrderModel orderModel3 = new OrderModel(3L, new Date(), 3L, null, 2L, "PENDING", new ArrayList<>());
+        OrderModel orderModel1 = new OrderModel(1L, new Date(), 1L, null, 1L, "PENDING", null, new ArrayList<>());
+        OrderModel orderModel2 = new OrderModel(2L, new Date(), 2L, null, 1L, "PENDING", null, new ArrayList<>());
+        OrderModel orderModel3 = new OrderModel(3L, new Date(), 3L, null, 2L, "PENDING", null, new ArrayList<>());
         when(orderServicePort.findOrderById(1L)).thenReturn(orderModel1);
         when(orderServicePort.findOrderById(2L)).thenReturn(orderModel2);
         when(orderServicePort.findOrderById(3L)).thenReturn(orderModel3);

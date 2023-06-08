@@ -20,3 +20,8 @@ users:
 
 jwt:
   secret-key: mi-clave-secreta-personalizada-de-32-bytes
+
+twilio:
+  accountSid: "ACec312272a2bf3820307ff33b2adfc920"
+  authToken: "4bc6c3684acd18a9ed998bdef1895721"
+  phoneNumber: "+13613149580"

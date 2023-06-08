@@ -16,8 +16,6 @@ public interface IOrderHandler {
 
     void assignEmployeeToOrder(List<Long> ordersId, Long employeeId);
 
-    void markOrderAsReady(Long orderId);
-
     void markOrderAsReadyWithMessage(Long orderId);
 
     void markOrderAsDelivered(Long orderId, String securityCode);

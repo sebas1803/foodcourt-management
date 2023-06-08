@@ -31,6 +31,8 @@ public class OrderEntity {
     @Column(nullable = false)
     private String status;
 
+    private String securityCode;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.MERGE, orphanRemoval = true)
     private List<OrderItemEntity> orderItems = new ArrayList<>();
 }
