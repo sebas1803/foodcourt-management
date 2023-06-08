@@ -1,9 +1,9 @@
 server:
-  port: 8081
+  port: 8082
 
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/powerup
+    url: jdbc:mysql://localhost:3306/rest_management_db
     username: root
     password: 1234
 
@@ -11,5 +11,17 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-appDescription: "Pragma Powerup"
+appDescription: "Pragma PowerUp FoodCourt Hexagonal Microservices"
 appVersion: "1.0.0"
+
+users:
+  service:
+    url: "http://localhost:8081/api/v1"
+
+jwt:
+  secret-key: mi-clave-secreta-personalizada-de-32-bytes
+
+twilio:
+  accountSid: "ACec312272a2bf3820307ff33b2adfc920"
+  authToken: "4bc6c3684acd18a9ed998bdef1895721"
+  phoneNumber: "+13613149580"
