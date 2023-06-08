@@ -33,8 +33,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // Orders
                 .antMatchers(HttpMethod.POST, "/api/v1/orders").hasAuthority("ROLE_CLIENT")
                 .antMatchers(HttpMethod.GET, "/api/v1/orders").hasAuthority("ROLE_EMPLOYEE")
-                .antMatchers(HttpMethod.PUT, "/api/v1/orders/cancelOrder/{orderId}").hasAuthority("ROLE_CLIENT")
                 .antMatchers(HttpMethod.PUT, "/api/v1/orders/assign").hasAuthority("ROLE_EMPLOYEE")
+                .antMatchers(HttpMethod.PUT, "/api/v1/orders/cancelOrder/{orderId}").hasAuthority("ROLE_CLIENT")
                 .antMatchers(HttpMethod.PUT, "/api/v1/orders/readyStatus/{orderId}").hasAuthority("ROLE_EMPLOYEE")
                 .antMatchers(HttpMethod.PUT, "/api/v1/orders/deliveredStatus/{orderId}").hasAuthority("ROLE_EMPLOYEE")
                 .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html/**").permitAll()

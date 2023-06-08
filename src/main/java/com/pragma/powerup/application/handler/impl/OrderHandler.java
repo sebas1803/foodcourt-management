@@ -11,7 +11,10 @@ import com.pragma.powerup.application.mapper.request.IOrderRequestMapper;
 import com.pragma.powerup.application.mapper.response.IOrderResponseMapper;
 import com.pragma.powerup.domain.api.IOrderServicePort;
 import com.pragma.powerup.domain.model.OrderModel;
+import com.pragma.powerup.infrastructure.security.impl.UserDetailsServiceImpl;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +35,7 @@ public class OrderHandler implements IOrderHandler {
 
     private final IRestaurantHandler restaurantHandler;
 
+    private final UserDetailsService userDetailsService;
     @Override
     public OrderResponseDto saveOrder(SaveOrderRequestDto saveOrderRequestDto) {
         Long clientId = saveOrderRequestDto.getIdClient();
@@ -77,8 +81,14 @@ public class OrderHandler implements IOrderHandler {
     }
 
     @Override
-    public void assignEmployeeToOrder(List<Long> orderId, Long employeeId) {
-
+    public void assignEmployeeToOrder(List<Long> ordersId, Long idEmployee) {
+        ordersId.forEach(
+                orderId -> {
+                    OrderModel orderModel = orderServicePort.findOrderById(orderId);
+                    orderModel.setIdEmployee(idEmployee);
+                    orderServicePort.updateStatus(OrderModel.IN_PREPARATION, orderModel);
+                }
+        );
     }
 
     @Override

@@ -1,8 +1,10 @@
 package com.pragma.powerup.infrastructure.input.rest;
 
+import com.pragma.powerup.application.dto.request.AssignOrderRequestDto;
 import com.pragma.powerup.application.dto.request.SaveOrderRequestDto;
 import com.pragma.powerup.application.dto.response.OrderResponseDto;
 import com.pragma.powerup.application.handler.IOrderHandler;
+import com.pragma.powerup.infrastructure.security.jwt.UserManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -12,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,5 +46,15 @@ public class OrderRestController {
                                                                 @RequestParam int size) {
         List<OrderResponseDto> orderResponseDtoList = orderHandler.findAllOrdersByStatus(status, restaurantId, page, size);
         return new ResponseEntity<>(orderResponseDtoList, HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_EMPLOYEE')")
+    @Operation(summary = "Assign an order to an employee")
+    @ApiResponse(responseCode = "200", description = "Orders assigned", content = @Content)
+    @PutMapping("/assign")
+    public ResponseEntity<String> updateAssignOrder(@RequestBody AssignOrderRequestDto ordersId) {
+        UserManager userPrincipal = (UserManager) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        orderHandler.assignEmployeeToOrder(ordersId.getIdOrders(), userPrincipal.getId());
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

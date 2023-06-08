@@ -39,7 +39,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                             .map(SimpleGrantedAuthority::new)
                             .collect(Collectors.toList());
                     LOGGER.debug("Loaded user authorities successfully");
-                    return new UserManager(userResponse.getEmail(), authorities);
+                    return new UserManager(userResponse.getId(), userResponse.getEmail(), authorities);
                 }
             }
         } catch (Exception e) {
