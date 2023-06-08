@@ -3,6 +3,7 @@ package com.pragma.powerup.application.handler.impl;
 import com.pragma.powerup.application.dto.request.OrderItemRequestDto;
 import com.pragma.powerup.application.dto.request.SaveOrderRequestDto;
 import com.pragma.powerup.application.dto.response.OrderResponseDto;
+import com.pragma.powerup.application.dto.response.UserResponseDto;
 import com.pragma.powerup.application.exception.ApplicationException;
 import com.pragma.powerup.application.handler.IOrderHandler;
 import com.pragma.powerup.application.handler.IOrderItemHandler;
@@ -11,8 +12,13 @@ import com.pragma.powerup.application.mapper.request.IOrderRequestMapper;
 import com.pragma.powerup.application.mapper.response.IOrderResponseMapper;
 import com.pragma.powerup.domain.api.IOrderServicePort;
 import com.pragma.powerup.domain.model.OrderModel;
+import com.pragma.powerup.infrastructure.out.api.TwilioApiClient;
+import com.pragma.powerup.infrastructure.out.api.UsersApiClient;
+import com.pragma.powerup.infrastructure.security.config.SecurityContext;
 import com.pragma.powerup.infrastructure.security.impl.UserDetailsServiceImpl;
+import com.pragma.powerup.infrastructure.security.jwt.UserManager;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
@@ -22,6 +28,7 @@ import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @AllArgsConstructor
@@ -35,7 +42,10 @@ public class OrderHandler implements IOrderHandler {
 
     private final IRestaurantHandler restaurantHandler;
 
-    private final UserDetailsService userDetailsService;
+    private final TwilioApiClient twilioApiClient;
+
+    private final UsersApiClient usersApiClient;
+
     @Override
     public OrderResponseDto saveOrder(SaveOrderRequestDto saveOrderRequestDto) {
         Long clientId = saveOrderRequestDto.getIdClient();
@@ -92,17 +102,30 @@ public class OrderHandler implements IOrderHandler {
     }
 
     @Override
-    public void markOrderAsReady(Long orderId) {
-
-    }
-
-    @Override
     public void markOrderAsReadyWithMessage(Long orderId) {
+        OrderModel orderModel = orderServicePort.findOrderById(orderId);
+        String securityCode = getSecurityPin();
+        orderModel.setSecurityCode(securityCode);
+        orderServicePort.updateStatus(OrderModel.READY, orderModel);
 
+        Long idClient = orderModel.getIdClient();
+        String token = SecurityContext.getToken();
+        UserResponseDto client = usersApiClient.getUserById(idClient, token);
+
+        String toPhoneNumber = client.getPhone();
+        String message = "Your order is ready for pickup. Please use the security PIN: " + securityCode;
+
+        twilioApiClient.sendSMS(toPhoneNumber, message);
     }
 
     @Override
     public void markOrderAsDelivered(Long orderId, String securityCode) {
 
+    }
+
+    public static String getSecurityPin() {
+        Random random = new Random();
+        int code = random.nextInt(9999 + 1);
+        return String.format("%04d", code);
     }
 }

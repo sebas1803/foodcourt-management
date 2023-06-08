@@ -4,6 +4,7 @@ import com.pragma.powerup.application.dto.request.AssignOrderRequestDto;
 import com.pragma.powerup.application.dto.request.SaveOrderRequestDto;
 import com.pragma.powerup.application.dto.response.OrderResponseDto;
 import com.pragma.powerup.application.handler.IOrderHandler;
+import com.pragma.powerup.infrastructure.security.config.SecurityContext;
 import com.pragma.powerup.infrastructure.security.jwt.UserManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,6 +18,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -55,6 +57,17 @@ public class OrderRestController {
     public ResponseEntity<String> updateAssignOrder(@RequestBody AssignOrderRequestDto ordersId) {
         UserManager userPrincipal = (UserManager) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         orderHandler.assignEmployeeToOrder(ordersId.getIdOrders(), userPrincipal.getId());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_EMPLOYEE')")
+    @Operation(summary = "Mark order as ready")
+    @ApiResponse(responseCode = "200", description = "Orders marked as ready", content = @Content)
+    @PutMapping("/readyStatus/{orderId}")
+    public ResponseEntity<Void> markOrderAsReady(@PathVariable Long orderId, HttpServletRequest request) {
+        String token = request.getHeader("Authorization").replace("Bearer ", "");
+        SecurityContext.setToken(token);
+        orderHandler.markOrderAsReadyWithMessage(orderId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

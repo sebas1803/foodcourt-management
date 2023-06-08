@@ -19,6 +19,7 @@ public class OrderModel {
     private Long idRestaurant;
     private Long idEmployee;
     private String status;
+    private String securityCode;
     private List<OrderItemModel> orderDishes;
 
     public static final String PENDING = "PENDING";

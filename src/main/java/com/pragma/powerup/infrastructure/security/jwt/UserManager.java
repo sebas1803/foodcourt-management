@@ -16,6 +16,7 @@ public class UserManager implements UserDetails {
 
     private Long id;
     private String email;
+    private String phone;
     private List<GrantedAuthority> authorities;
 
     @Override
