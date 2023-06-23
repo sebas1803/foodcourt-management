@@ -1,0 +1,14 @@
+{
+  "AWSEBDockerrunVersion": "1",
+  "Image": {
+    "Name": "sebas1803/plazoleta:v1.0",
+    "Update": "true"
+  },
+  "Ports": [
+    {
+      "ContainerPort": 8082,
+      "HostPort": 8082
+    }
+  ],
+  "Logging": "/var/log/nginx"
+}
