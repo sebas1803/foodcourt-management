@@ -1,5 +1,6 @@
 package com.pragma.powerup.infrastructure.configuration;
 
+import com.amazonaws.services.cognitoidp.AWSCognitoIdentityProvider;
 import com.pragma.powerup.domain.api.IDishServicePort;
 import com.pragma.powerup.domain.api.IOrderItemServicePort;
 import com.pragma.powerup.domain.api.IOrderServicePort;
@@ -12,6 +13,7 @@ import com.pragma.powerup.domain.usecase.DishUseCase;
 import com.pragma.powerup.domain.usecase.OrderItemUseCase;
 import com.pragma.powerup.domain.usecase.OrderUseCase;
 import com.pragma.powerup.domain.usecase.RestaurantUseCase;
+import com.pragma.powerup.infrastructure.cognito.CognitoUserService;
 import com.pragma.powerup.infrastructure.out.api.UsersApiClient;
 import com.pragma.powerup.infrastructure.out.jpa.adapter.DishJpaAdapter;
 import com.pragma.powerup.infrastructure.out.jpa.adapter.OrderItemJpaAdapter;
@@ -44,8 +46,6 @@ public class BeanConfiguration {
 
     private final IOrderItemRepository orderItemRepository;
     private final IOrderItemEntityMapper orderItemEntityMapper;
-
-    //private final AwsConfig awsConfig;
 
     // RestTemplate
     @Bean

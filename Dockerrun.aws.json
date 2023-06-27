@@ -1,7 +1,7 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "sebas1803/plazoleta:v1.0",
+    "Name": "sebas1803/plazoleta:v2.2",
     "Update": "true"
   },
   "Ports": [

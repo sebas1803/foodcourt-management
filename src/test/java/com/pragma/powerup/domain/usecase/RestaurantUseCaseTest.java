@@ -4,11 +4,9 @@ import com.pragma.powerup.application.dto.response.UserResponseDto;
 import com.pragma.powerup.domain.model.RestaurantModel;
 import com.pragma.powerup.domain.spi.IRestaurantPersistencePort;
 import com.pragma.powerup.infrastructure.out.api.UsersApiClient;
-import com.pragma.powerup.infrastructure.security.config.SecurityContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -39,9 +37,9 @@ public class RestaurantUseCaseTest {
         owner.setRoles(Collections.singletonList("ROLE_OWNER"));
 
         UsersApiClient usersApiClientMock = Mockito.mock(UsersApiClient.class);
-        Mockito.when(usersApiClientMock.getUserById(1L, SecurityContext.getToken())).thenReturn(owner);
+        //Mockito.when(usersApiClientMock.getUserById(1L, SecurityContext.getToken())).thenReturn(owner);
 
-        RestaurantUseCase restaurantUseCase = new RestaurantUseCase(restaurantPersistencePort, usersApiClientMock);
+        RestaurantUseCase restaurantUseCase = new RestaurantUseCase(restaurantPersistencePort);
 
         // When
         restaurantUseCase.saveRestaurant(restaurantModel);

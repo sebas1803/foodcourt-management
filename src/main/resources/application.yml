@@ -17,9 +17,9 @@ aws:
 
 spring:
   datasource:
-    url: jdbc:mysql://db-plazoleta.cplqdirvtijo.us-east-2.rds.amazonaws.com:3306/rest_management_db
-    username: admin
-    password: admin123
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://db-plazoleta.cplqdirvtijo.us-east-2.rds.amazonaws.com:3306/rest_management_db}
+    username: ${SPRING_DATASOURCE_USERNAME:admin}
+    password: ${SPRING_DATASOURCE_PASSWORD:admin123}
 
   jpa:
     hibernate:

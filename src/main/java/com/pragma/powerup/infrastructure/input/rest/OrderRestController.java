@@ -76,9 +76,8 @@ public class OrderRestController {
     @Operation(summary = "Cancel an order")
     @ApiResponse(responseCode = "200", description = "Order canceled", content = @Content)
     @PutMapping("/cancelOrder/{orderId}")
-    public ResponseEntity<OrderResponseDto> cancelOrder(@PathVariable Long orderId) {
-        //OrderResponseDto orderResponseDto = orderHandler.cancelOrder(orderId, clientId);
-        //return new ResponseEntity<>(orderResponseDto, HttpStatus.OK);
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<OrderResponseDto> cancelOrder(@PathVariable Long orderId, @RequestParam Long clientId) {
+        OrderResponseDto orderResponseDto = orderHandler.cancelOrder(orderId, clientId);
+        return new ResponseEntity<>(orderResponseDto, HttpStatus.OK);
     }
 }
