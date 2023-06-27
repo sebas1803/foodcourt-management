@@ -40,15 +40,17 @@ dependencies {
     testImplementation 'org.mockito:mockito-junit-jupiter:3.12.4'
 
     // Security
-    implementation 'org.springframework.boot:spring-boot-starter-security'
 
     // Twilio SMS
     implementation "com.twilio.sdk:twilio:9.6.2"
 
     // Jwt
-    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
-    implementation 'io.jsonwebtoken:jjwt-impl:0.11.2'
-    implementation 'io.jsonwebtoken:jjwt-jackson:0.11.2'
+
+    // AWS
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-cognitoidp', version: '1.12.495'
+    //implementation 'software.amazon.awssdk:cognitoidentityprovider:2.17.100'
+    // implementation 'io.awspring.cloud:spring-cloud-aws:2.3.0'
+    // implementation 'io.awspring.cloud:spring-cloud-starter-aws-parameter-store-config:2.4.2'
 
     runtimeOnly "mysql:mysql-connector-java:${mySqlConnectorVersion}"
 

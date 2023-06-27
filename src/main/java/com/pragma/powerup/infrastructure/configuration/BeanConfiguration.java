@@ -12,7 +12,6 @@ import com.pragma.powerup.domain.usecase.DishUseCase;
 import com.pragma.powerup.domain.usecase.OrderItemUseCase;
 import com.pragma.powerup.domain.usecase.OrderUseCase;
 import com.pragma.powerup.domain.usecase.RestaurantUseCase;
-import com.pragma.powerup.infrastructure.out.api.TwilioApiClient;
 import com.pragma.powerup.infrastructure.out.api.UsersApiClient;
 import com.pragma.powerup.infrastructure.out.jpa.adapter.DishJpaAdapter;
 import com.pragma.powerup.infrastructure.out.jpa.adapter.OrderItemJpaAdapter;
@@ -26,7 +25,6 @@ import com.pragma.powerup.infrastructure.out.jpa.repository.IDishRepository;
 import com.pragma.powerup.infrastructure.out.jpa.repository.IOrderItemRepository;
 import com.pragma.powerup.infrastructure.out.jpa.repository.IOrderRepository;
 import com.pragma.powerup.infrastructure.out.jpa.repository.IRestaurantRepository;
-import com.pragma.powerup.infrastructure.security.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,6 +45,8 @@ public class BeanConfiguration {
     private final IOrderItemRepository orderItemRepository;
     private final IOrderItemEntityMapper orderItemEntityMapper;
 
+    //private final AwsConfig awsConfig;
+
     // RestTemplate
     @Bean
     public RestTemplate restTemplate() {
@@ -60,10 +60,7 @@ public class BeanConfiguration {
     }
 
     // Authentication
-    @Bean
-    public JwtFilter jwtTokenFilter() {
-        return new JwtFilter();
-    }
+
 
     // Beans for restaurants
     @Bean
@@ -73,7 +70,7 @@ public class BeanConfiguration {
 
     @Bean
     public IRestaurantServicePort restaurantServicePort() {
-        return new RestaurantUseCase(restaurantPersistencePort(), usersApiClient());
+        return new RestaurantUseCase(restaurantPersistencePort());
     }
 
     // Beans for dishes

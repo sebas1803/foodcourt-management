@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: PlazoletaApp
+
+aws:
+  paramstore:
+    prefix: /config
+    defaultContext: application
+    profileSeparator: _
+    enabled: true

@@ -14,13 +14,7 @@ import com.pragma.powerup.domain.api.IOrderServicePort;
 import com.pragma.powerup.domain.model.OrderModel;
 import com.pragma.powerup.infrastructure.out.api.TwilioApiClient;
 import com.pragma.powerup.infrastructure.out.api.UsersApiClient;
-import com.pragma.powerup.infrastructure.security.config.SecurityContext;
-import com.pragma.powerup.infrastructure.security.impl.UserDetailsServiceImpl;
-import com.pragma.powerup.infrastructure.security.jwt.UserManager;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -107,13 +101,13 @@ public class OrderHandler implements IOrderHandler {
         orderServicePort.updateStatus(OrderModel.READY, orderModel);
 
         Long idClient = orderModel.getIdClient();
-        String token = SecurityContext.getToken();
-        UserResponseDto client = usersApiClient.getUserById(idClient, token);
+        //String token = SecurityContext.getToken();
+        //UserResponseDto client = usersApiClient.getUserById(idClient, token);
 
-        String toPhoneNumber = client.getPhone();
+        //String toPhoneNumber = client.getPhone();
         String message = "Your order is ready for pickup. Please use the security PIN: " + securityCode;
 
-        twilioApiClient.sendSMS(toPhoneNumber, message);
+        //twilioApiClient.sendSMS(toPhoneNumber, message);
     }
 
     @Override

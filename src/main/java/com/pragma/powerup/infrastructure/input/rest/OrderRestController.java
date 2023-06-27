@@ -4,8 +4,6 @@ import com.pragma.powerup.application.dto.request.AssignOrderRequestDto;
 import com.pragma.powerup.application.dto.request.SaveOrderRequestDto;
 import com.pragma.powerup.application.dto.response.OrderResponseDto;
 import com.pragma.powerup.application.handler.IOrderHandler;
-import com.pragma.powerup.infrastructure.security.config.SecurityContext;
-import com.pragma.powerup.infrastructure.security.jwt.UserManager;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,11 +12,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
@@ -29,7 +24,7 @@ import java.util.List;
 public class OrderRestController {
     private final IOrderHandler orderHandler;
 
-    @PreAuthorize("hasAuthority('ROLE_CLIENT')")
+    //@PreAuthorize("hasAuthority('ROLE_CLIENT')")
     @Operation(summary = "Create a new order")
     @ApiResponse(responseCode = "201", description = "Order created", content = @Content)
     @PostMapping()
@@ -38,7 +33,7 @@ public class OrderRestController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_EMPLOYEE')")
+    //@PreAuthorize("hasAuthority('ROLE_EMPLOYEE')")
     @Operation(summary = "Find all orders by status")
     @ApiResponse(responseCode = "200", description = "Orders by status returned", content = @Content)
     @GetMapping()
@@ -50,28 +45,25 @@ public class OrderRestController {
         return new ResponseEntity<>(orderResponseDtoList, HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_EMPLOYEE')")
+    //@PreAuthorize("hasAuthority('ROLE_EMPLOYEE')")
     @Operation(summary = "Assign an order to an employee")
     @ApiResponse(responseCode = "200", description = "Orders assigned", content = @Content)
     @PutMapping("/assign")
     public ResponseEntity<String> updateAssignOrder(@RequestBody AssignOrderRequestDto ordersId) {
-        UserManager userPrincipal = (UserManager) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        orderHandler.assignEmployeeToOrder(ordersId.getIdOrders(), userPrincipal.getId());
+        //orderHandler.assignEmployeeToOrder(ordersId.getIdOrders(), employeeId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_EMPLOYEE')")
+    //@PreAuthorize("hasAuthority('ROLE_EMPLOYEE')")
     @Operation(summary = "Mark order as ready")
     @ApiResponse(responseCode = "200", description = "Orders marked as ready", content = @Content)
     @PutMapping("/readyStatus/{orderId}")
-    public ResponseEntity<Void> markOrderAsReady(@PathVariable Long orderId, HttpServletRequest request) {
-        String token = request.getHeader("Authorization").replace("Bearer ", "");
-        SecurityContext.setToken(token);
+    public ResponseEntity<Void> markOrderAsReady(@PathVariable Long orderId) {
         orderHandler.markOrderAsReadyWithMessage(orderId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_EMPLOYEE')")
+    //@PreAuthorize("hasAuthority('ROLE_EMPLOYEE')")
     @Operation(summary = "Mark an order as delivered")
     @ApiResponse(responseCode = "200", description = "Orders marked as delivered", content = @Content)
     @PutMapping("/deliveredStatus/{orderId}")
@@ -80,13 +72,13 @@ public class OrderRestController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PreAuthorize("hasAuthority('ROLE_CLIENT')")
+    //@PreAuthorize("hasAuthority('ROLE_CLIENT')")
     @Operation(summary = "Cancel an order")
     @ApiResponse(responseCode = "200", description = "Order canceled", content = @Content)
     @PutMapping("/cancelOrder/{orderId}")
     public ResponseEntity<OrderResponseDto> cancelOrder(@PathVariable Long orderId) {
-        UserManager userPrincipal = (UserManager) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        OrderResponseDto orderResponseDto = orderHandler.cancelOrder(orderId, userPrincipal.getId());
-        return new ResponseEntity<>(orderResponseDto, HttpStatus.OK);
+        //OrderResponseDto orderResponseDto = orderHandler.cancelOrder(orderId, clientId);
+        //return new ResponseEntity<>(orderResponseDto, HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
