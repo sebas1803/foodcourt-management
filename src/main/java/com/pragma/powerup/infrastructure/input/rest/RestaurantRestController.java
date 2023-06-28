@@ -19,7 +19,6 @@ import java.util.List;
 @RestController
 @Tag(name = "Restaurants")
 @RequestMapping("api/v1/restaurants")
-@SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class RestaurantRestController {
     private final IRestaurantHandler restaurantHandler;

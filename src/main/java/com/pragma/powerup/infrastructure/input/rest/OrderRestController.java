@@ -7,7 +7,6 @@ import com.pragma.powerup.application.handler.IOrderHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,7 +18,6 @@ import java.util.List;
 @RestController
 @Tag(name = "Orders")
 @RequestMapping("api/v1/orders")
-@SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class OrderRestController {
     private final IOrderHandler orderHandler;
@@ -49,8 +47,8 @@ public class OrderRestController {
     @Operation(summary = "Assign an order to an employee")
     @ApiResponse(responseCode = "200", description = "Orders assigned", content = @Content)
     @PutMapping("/assign")
-    public ResponseEntity<String> updateAssignOrder(@RequestBody AssignOrderRequestDto ordersId) {
-        //orderHandler.assignEmployeeToOrder(ordersId.getIdOrders(), employeeId);
+    public ResponseEntity<String> updateAssignOrder(@RequestBody AssignOrderRequestDto ordersId, @RequestParam Long employeeId) {
+        orderHandler.assignEmployeeToOrder(ordersId.getIdOrders(), employeeId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

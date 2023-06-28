@@ -7,14 +7,6 @@ server:
     #username: root
     #password: 1234
 
-aws:
-  region: us-east-2
-  access-key: AKIASZSMEN4HHJSXLZSN
-  secret-key: 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
-  cognito:
-    user-pool-id: us-east-2_UT37VuAGU
-    app-client-id: 76kgijs2j89i9h4sa32o0i76t3
-
 spring:
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:mysql://db-plazoleta.cplqdirvtijo.us-east-2.rds.amazonaws.com:3306/rest_management_db}

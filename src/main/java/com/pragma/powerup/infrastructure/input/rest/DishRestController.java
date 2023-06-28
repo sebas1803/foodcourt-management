@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Tag(name = "Dishes")
 @RequestMapping("api/v1/dishes")
-@SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class DishRestController {
     private final IDishHandler dishHandler;
